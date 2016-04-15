@@ -85,7 +85,24 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public void add(int index, E element) {
-		// TODO: fill this in
+		if (index < 0 || index > size){
+			throw new IndexOutOfBoundsException();
+		} else {
+			if (index == size){
+				add(element);
+			} else if (index == 0){
+				Node newNode = new Node(element, head);
+				head = newNode;
+			} else {
+				Node cur = head;
+				for (int i = 0; i < index-1; i++){
+					cur = cur.next;
+				} 
+				Node newNode = new Node(element, cur.next);
+				cur.next = newNode;
+			}
+			size++;
+		}
 	}
 
 	@Override
@@ -146,7 +163,14 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public int indexOf(Object target) {
-		// TODO: fill this in
+		if (head == null) return -1;
+		Node cur = head;
+		for (int i = 0; i < size; i++){
+			if (equals(target, cur.cargo)){
+				return i;
+			}
+			cur = cur.next;
+		}
 		return -1;
 	}
 
@@ -201,14 +225,46 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public boolean remove(Object obj) {
-		// TODO: fill this in
+		if (head == null) return false;
+		if (equals(obj, head.cargo)){
+			head.cargo = null;
+			head = head.next;
+			size--;
+			return true;
+		}
+		
+		Node cur = head;
+		Node prev = null;
+		while (cur.next != null){
+			if (equals(obj, cur.cargo)){
+				prev.next = cur.next;
+				size--;
+				return true;
+			}
+			prev = cur;
+			cur = cur.next;
+		}
 		return false;
 	}
 
 	@Override
 	public E remove(int index) {
-		// TODO: fill this in
-		return null;
+		if (head == null || index < 0 || index >= size) return null;
+		if (index == 0){
+			E old = head.cargo;
+			head = head.next;
+			size--;
+			return old;
+		}
+
+		Node cur = head;
+		for (int i = 0; i < index-1; i++){
+			cur = cur.next;
+		}
+		E old = cur.next.cargo;
+		cur.next = cur.next.next;
+		size--;
+		return old;
 	}
 
 	@Override
